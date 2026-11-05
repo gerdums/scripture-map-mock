@@ -199,6 +199,56 @@ header.hero{padding-block:64px 40px;display:grid;gap:22px}
 .sx .foot{display:flex;justify-content:space-between;align-items:center;gap:10px;border-top:1px solid var(--n200);padding-top:14px;flex-wrap:wrap}
 .sx .hint{font-size:11.5px;color:var(--n600);display:flex;gap:12px;flex-wrap:wrap}
 
+/* plugin tabs */
+.sx .tabs{display:flex;border-bottom:1px solid var(--n200);margin-top:-6px}
+.sx .tabs span{padding:8px 14px;font-weight:600;font-size:12.5px;color:var(--n600);border-bottom:2px solid transparent;margin-bottom:-1px}
+.sx .tabs span.on{color:var(--p);border-bottom-color:var(--p)}
+/* resources list */
+.sx .views{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:12px;color:var(--n600)}
+.sx .views span.v{border:1px solid var(--n200);background:var(--n0);border-radius:999px;padding:3px 10px;color:var(--n800);font-weight:600}
+.sx .views span.v.on{background:var(--n900);border-color:var(--n900);color:#fff}
+.sx .fl{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.sx .fd{background:var(--n0);border:1px solid var(--n200);border-radius:4px;padding:6px 10px;font-size:12px;color:var(--n800);white-space:nowrap}
+.sx .fd i{font-style:normal;color:var(--n600)}
+.sx .fd.set{border-color:var(--p);background:var(--p3);color:var(--p);font-weight:600}
+.sx .fd.set i{color:var(--p)}
+.sx .types{display:inline-flex;border:1px solid var(--n200);border-radius:4px;overflow:hidden;background:var(--n0)}
+.sx .types button{border:0;border-right:1px solid var(--n200);background:none;padding:6px 11px;font:600 12px/1.2 inherit;color:var(--n600);cursor:pointer;white-space:nowrap}
+.sx .types button:last-child{border-right:0}
+.sx .types button[aria-pressed="true"]{background:var(--p);color:#fff}
+.sx .types button small{font-weight:500;opacity:.8;margin-left:4px}
+.sx .rt td{vertical-align:top}
+.sx .rt td.ck{width:28px;padding-right:0}
+.sx .cb{width:13px;height:13px;border:1.5px solid var(--n500);border-radius:3px;display:inline-block;margin-top:2px}
+.sx .cb.on{background:var(--p);border-color:var(--p);box-shadow:inset 0 0 0 2px #fff}
+.sx .rt .sf{color:var(--n800)}
+.sx .rt .sf em{font-style:normal;font-size:10px;font-weight:700;color:#A65A00;background:var(--ob);border:1px solid var(--obd);border-radius:3px;padding:0 4px;margin-left:4px;text-transform:uppercase}
+.sx .pcs{display:flex;gap:4px;flex-wrap:wrap}
+.sx .pc{font-size:11px;border:1px solid var(--n200);border-radius:10px;padding:1px 8px;white-space:nowrap;background:var(--n0)}
+.sx .pc.sg{border-style:dashed;border-color:#C46A12}
+.sx .gh td{background:var(--n100);font-size:11.5px;color:var(--n600);padding:7px 16px}
+.sx .gh b{color:var(--n900)}
+.sx .bulk{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--n900);color:#fff;border-radius:4px;padding:8px 12px;font-size:12px}
+.sx .bulk .btn{background:transparent;color:#fff;border-color:#4A4A6A}
+.sx .typerows{display:grid;grid-template-columns:110px 1fr 160px;gap:6px 12px;align-items:center;font-size:12px;margin-top:12px;font-variant-numeric:tabular-nums}
+.sx .typerows .tb{height:8px;border-radius:4px;background:var(--n150);overflow:hidden;display:flex}
+.sx .typerows .tb i{display:block;height:100%}
+.sx .typerows span:nth-child(3n){color:var(--n600);text-align:right}
+/* content manager edit view */
+.sx .cm{display:grid;grid-template-columns:1fr 250px;gap:14px;align-items:start}
+.sx .fld{display:grid;gap:4px;font-size:12px}
+.sx .fld label{font-weight:600;color:var(--n800)}
+.sx .inp{border:1px solid var(--n200);border-radius:4px;padding:8px 10px;background:var(--n0);color:var(--n800)}
+.sx .inp.ta{min-height:86px;color:#4A4A6A;line-height:1.55}
+.sx .side{display:grid;gap:12px}
+.sx .box h5{margin:0 0 8px;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--n600)}
+.sx .kv{display:flex;justify-content:space-between;font-size:12px;padding:3px 0}
+.sx .kv span:first-child{color:var(--n600)}
+.sx .plk{display:grid;gap:2px;padding:7px 0;border-top:1px solid var(--n150);font-size:12px}
+.sx .plk:first-of-type{border-top:0}
+.sx .plk b{color:var(--n900)}
+.sx .inj{border:2px dashed var(--p2);border-radius:6px;padding:12px;background:#FAFAFF}
+
 /* API plate */
 .api{display:grid;grid-template-columns:1.05fr 1fr;gap:0;min-width:880px}
 .api pre{margin:0;background:var(--code-bg);color:var(--code-ink);font:12.5px/1.6 var(--mono);padding:20px 22px;overflow:auto}
@@ -296,12 +346,12 @@ header.hero{padding-block:64px 40px;display:grid;gap:22px}
 <section>
   <div class="col stack">
     <div class="eyebrow">Screens</div>
-    <h2>Five screens in the Strapi admin</h2>
-    <p>The plugin gets its own entry under Plugins. Home answers three questions: how far along we are, where in the Bible we have content, and what needs an editor. Every other screen is one click from Home. On a phone, scroll each screen sideways.</p>
+    <h2>Two ways in: by content or by Scripture</h2>
+    <p>Editors mostly work through content: a sermon series, this month's articles, every blog with a blank Scripture field. So <b>Resources</b> is the main screen. It's a filtered list of resources, each showing its passages and strengths. <b>Bible</b> is the second way in, for checking what a passage shows on the site. The same links also appear inside the Content Manager. On a phone, scroll each screen sideways.</p>
   </div>
 
   <div class="plate">
-    <div class="cap"><span class="eyebrow">Home</span><h3>Start here</h3><p>The bar shows progress across every resource. The chart shows linked resources per book, split by strength. Hover a book to see its numbers. Click one to open it.</p></div>
+    <div class="cap"><span class="eyebrow">Home</span><h3>Start here</h3><p>Progress across every resource, broken down by content type, so each row opens Resources already filtered to that type. Below that is the same picture across the Bible. Hover a book to see its numbers.</p></div>
     <div class="scroll"><div class="sx">
       <div class="nav"><div class="ws"><b>G</b><div>GTY Core<small>Workplace</small></div></div>
         <span>Content Manager</span><span>Media Library</span>
@@ -309,11 +359,20 @@ header.hero{padding-block:64px 40px;display:grid;gap:22px}
         <div class="g">GENERAL</div><span>Settings</span></div>
       <div class="main">
         <div class="head"><div><h4>Scripture Map</h4><div class="sub">Which GTY resources teach which Bible passages, and how strongly.</div></div><span class="btn pri">Review 812 →</span></div>
+        <div class="tabs"><span class="on">Home</span><span>Resources</span><span>Bible</span><span>Review</span></div>
         <div class="search">⌕ Go to a passage or resource, like “Genesis 1:1” or “Romans 8”<kbd>⌘K</kbd></div>
         <div class="card">
           <div class="ch"><h5>Your 4,812 resources</h5><span>sermons, articles, blogs, Q&amp;As, devotionals, study guides</span></div>
           <div class="track"><i style="width:62%;background:var(--g)"></i><i style="width:17%;background:var(--o)"></i><i style="width:21%;background:var(--n200)"></i></div>
           <div class="keys"><span><i class="sw" style="background:var(--g)"></i><b>2,980</b> reviewed</span><span><i class="sw" style="background:var(--o)"></i><b>812</b> suggestions waiting for an editor</span><span><i class="sw" style="background:var(--n200)"></i><b>1,020</b> not analyzed yet</span></div>
+          <div class="typerows">
+            <span>Sermons</span><span class="tb"><i style="width:66%;background:var(--g)"></i><i style="width:18%;background:var(--o)"></i></span><span>3,410 · 66% reviewed</span>
+            <span>Articles</span><span class="tb"><i style="width:58%;background:var(--g)"></i><i style="width:20%;background:var(--o)"></i></span><span>520 · 58% reviewed</span>
+            <span>Blogs</span><span class="tb"><i style="width:41%;background:var(--g)"></i><i style="width:15%;background:var(--o)"></i></span><span>410 · 41% reviewed</span>
+            <span>Q&amp;As</span><span class="tb"><i style="width:55%;background:var(--g)"></i><i style="width:12%;background:var(--o)"></i></span><span>290 · 55% reviewed</span>
+            <span>Devotionals</span><span class="tb"><i style="width:80%;background:var(--g)"></i><i style="width:8%;background:var(--o)"></i></span><span>120 · 80% reviewed</span>
+            <span>Study guides</span><span class="tb"><i style="width:35%;background:var(--g)"></i><i style="width:10%;background:var(--o)"></i></span><span>62 · 35% reviewed</span>
+          </div>
         </div>
         <div class="card">
           <div class="ch"><h5>Across the Bible</h5><span>resources linked to each book</span></div>
@@ -333,7 +392,89 @@ header.hero{padding-block:64px 40px;display:grid;gap:22px}
   </div>
 
   <div class="plate">
-    <div class="cap"><span class="eyebrow">Book</span><h3>Genesis, chapter by chapter</h3><p>The same chart, one bar per chapter. Resources that cover the whole book, like a series, sit above it. The table lists chapters that need work, with busy and thin chapters first.</p></div>
+    <div class="cap"><span class="eyebrow">Resources</span><h3>Work through content, filtered your way</h3><p>The main editor screen. Filter by type, series, review status, how good the Scripture field is, date, author or topic. Save a filter as a view. Each row shows the resource's passages: solid outlines are approved, dashed ones are suggestions waiting. Group by series to review sermons in preaching order. Click the type buttons to try the filter.</p></div>
+    <div class="scroll"><div class="sx">
+      <div class="nav"><div class="ws"><b>G</b><div>GTY Core<small>Workplace</small></div></div>
+        <span>Content Manager</span><span>Media Library</span>
+        <div class="g">PLUGINS</div><span>Broadcast Calendar</span><span>Content Sync</span><span class="on">Scripture Map</span>
+        <div class="g">GENERAL</div><span>Settings</span></div>
+      <div class="main">
+        <div class="head"><div><h4>Resources</h4><div class="sub">4,812 resources · 812 with suggestions waiting</div></div><div class="acts"><span class="btn">Save view</span><span class="btn pri">Review these 10 in order →</span></div></div>
+        <div class="tabs"><span>Home</span><span class="on">Resources</span><span>Bible</span><span>Review</span></div>
+        <div class="views">Saved views: <span class="v on">All resources</span><span class="v">Romans series</span><span class="v">Vague or blank Scripture</span><span class="v">Models disagree</span><span class="v">Articles this month</span><span class="v">My reviews</span></div>
+        <div class="fl">
+          <div class="types" id="typeFilter" role="group" aria-label="Content type">
+            <button type="button" data-t="all" aria-pressed="true">All<small>4,812</small></button>
+            <button type="button" data-t="Sermon" aria-pressed="false">Sermons<small>3,410</small></button>
+            <button type="button" data-t="Article" aria-pressed="false">Articles<small>520</small></button>
+            <button type="button" data-t="Blog" aria-pressed="false">Blogs<small>410</small></button>
+            <button type="button" data-t="Q&amp;A" aria-pressed="false">Q&amp;As<small>290</small></button>
+          </div>
+          <span class="fd"><i>Series:</i> Any ▾</span>
+          <span class="fd"><i>Status:</i> Any ▾</span>
+          <span class="fd"><i>Scripture field:</i> Any ▾</span>
+          <span class="fd"><i>Date:</i> Any ▾</span>
+          <span class="fd"><i>Group by:</i> Series ▾</span>
+          <span class="fd">+ Filter</span>
+        </div>
+        <div class="bulk"><span>2 selected</span><span class="btn sm">Approve suggestions</span><span class="btn sm">Mark “no main passage”</span><span class="btn sm">Ask the agent again</span></div>
+        <div class="card flush">
+          <table class="rt" id="resTable">
+            <thead><tr><th></th><th>Resource</th><th>Scripture field</th><th>Passages</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr class="gh" data-g="romans"><td colspan="5"><b>The Glory of the Gospel</b> · Romans series · 5 of 12 sermons, in preaching order</td></tr>
+              <tr data-t="Sermon" data-g="romans"><td class="ck"><span class="cb"></span></td><td><div class="t">The Gospel of God</div><div class="m"><span class="tag">Sermon</span>45-02 · 1985</div></td><td class="sf">Romans 1:1–7</td><td><div class="pcs"><span class="pc">Rom 1:1–7 <span class="pp q3">●●●</span></span></div></td><td><span class="chip good">Reviewed</span></td></tr>
+              <tr data-t="Sermon" data-g="romans"><td class="ck"><span class="cb"></span></td><td><div class="t">Not Ashamed of the Gospel</div><div class="m"><span class="tag">Sermon</span>45-06 · 1985</div></td><td class="sf">Romans 1:16–17</td><td><div class="pcs"><span class="pc">Rom 1:16–17 <span class="pp q3">●●●</span></span><span class="pc">Hab 2:4 <span class="pp q2">●●○</span></span></div></td><td><span class="chip good">Reviewed</span></td></tr>
+              <tr data-t="Sermon" data-g="romans"><td class="ck"><span class="cb on"></span></td><td><div class="t">The Wrath of God Revealed</div><div class="m"><span class="tag">Sermon</span>45-08 · 1985</div></td><td class="sf">Selected Scriptures<em>vague</em></td><td><div class="pcs"><span class="pc sg">Rom 1:18–23 <span class="pp q3">●●●</span></span><span class="pc sg">Ps 19:1 <span class="pp q1">●○○</span></span></div></td><td><span class="chip thin">2 waiting</span></td></tr>
+              <tr data-t="Sermon" data-g="romans"><td class="ck"><span class="cb on"></span></td><td><div class="t">No Condemnation</div><div class="m"><span class="tag">Sermon</span>45-61 · 1987</div></td><td class="sf">Romans 8:1</td><td><div class="pcs"><span class="pc sg">Rom 8:1–4 <span class="pp q3">●●●</span></span></div><div class="m" style="margin-top:4px">agent suggests a wider range</div></td><td><span class="chip thin">1 waiting</span></td></tr>
+              <tr data-t="Sermon" data-g="romans"><td class="ck"><span class="cb"></span></td><td><div class="t">All Things for Good</div><div class="m"><span class="tag">Sermon</span>45-70 · 1987</div></td><td class="sf">—<em>blank</em></td><td><div class="pcs"><span class="pc sg">Rom 8:28–30 <span class="pp q3">●●●</span></span><span class="pc sg">Gen 50:20 <span class="pp q2">●●○</span></span></div><div class="m" style="margin-top:4px">two models disagree on Gen 50:20</div></td><td><span class="chip thin">2 waiting</span></td></tr>
+              <tr class="gh" data-g="none"><td colspan="5"><b>Not in a series</b></td></tr>
+              <tr data-t="Article" data-g="none"><td class="ck"><span class="cb"></span></td><td><div class="t">Why Creation Matters for the Gospel</div><div class="m"><span class="tag">Article</span>2024</div></td><td class="sf">—<em>blank</em></td><td><div class="pcs"><span class="pc">Gen 1:1 <span class="pp q2">●●○</span></span><span class="pc">Rom 1:20 <span class="pp q2">●●○</span></span></div></td><td><span class="chip good">Reviewed</span></td></tr>
+              <tr data-t="Blog" data-g="none"><td class="ck"><span class="cb"></span></td><td><div class="t">Answering the Evolutionist</div><div class="m"><span class="tag">Blog</span>2023</div></td><td class="sf">—<em>blank</em></td><td><div class="pcs"><span class="pc sg">Gen 1:1 <span class="pp q2">●●○</span></span></div></td><td><span class="chip thin">1 waiting</span></td></tr>
+              <tr data-t="Q&amp;A" data-g="none"><td class="ck"><span class="cb"></span></td><td><div class="t">Is the Creation Account Literal?</div><div class="m"><span class="tag">Q&amp;A</span>2019</div></td><td class="sf">Genesis 1</td><td><div class="pcs"><span class="pc">Gen 1:1–2 <span class="pp q3">●●●</span></span></div></td><td><span class="chip good">Reviewed</span></td></tr>
+              <tr data-t="Q&amp;A" data-g="none"><td class="ck"><span class="cb"></span></td><td><div class="t">Should Christians Celebrate Halloween?</div><div class="m"><span class="tag">Q&amp;A</span>2016</div></td><td class="sf">—<em>blank</em></td><td><div class="pcs"><span class="pc">Eph 5:11 <span class="pp q1">●○○</span></span></div></td><td><span class="chip">No main passage</span></td></tr>
+              <tr data-t="Blog" data-g="none"><td class="ck"><span class="cb"></span></td><td><div class="t">A Word to Discouraged Pastors</div><div class="m"><span class="tag">Blog</span>2026</div></td><td class="sf">—<em>blank</em></td><td><div class="m">Not read by an agent yet</div></td><td><span class="chip">Not analyzed</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div></div>
+  </div>
+
+  <div class="plate">
+    <div class="cap"><span class="eyebrow">Content Manager</span><h3>Passages beside the sermon you're editing</h3><p>Strapi lets a plugin add a panel to the right column of the edit view. An editor fixing a sermon's title or transcript sees its passages there too, can approve suggestions in place, or can open the full review. Every change is saved as an editor decision, the same as on the Review screen.</p></div>
+    <div class="scroll"><div class="sx">
+      <div class="nav"><div class="ws"><b>G</b><div>GTY Core<small>Workplace</small></div></div>
+        <span class="on">Content Manager</span><span>Media Library</span>
+        <div class="g">PLUGINS</div><span>Broadcast Calendar</span><span>Content Sync</span><span>Scripture Map</span>
+        <div class="g">GENERAL</div><span>Settings</span></div>
+      <div class="main">
+        <div class="crumb">Content Manager › Sermon</div>
+        <div class="head"><div><h4>The Wrath of God Revealed</h4><div class="sub">Sermon · 45-08 · Published</div></div><div class="acts"><span class="btn">Unpublish</span><span class="btn pri">Save</span></div></div>
+        <div class="cm">
+          <div class="card" style="display:grid;gap:12px">
+            <div class="fld"><label>Title</label><div class="inp">The Wrath of God Revealed</div></div>
+            <div class="two" style="grid-template-columns:1fr 1fr"><div class="fld"><label>Code</label><div class="inp">45-08</div></div><div class="fld"><label>Scripture</label><div class="inp">Selected Scriptures</div></div></div>
+            <div class="fld"><label>Transcript</label><div class="inp ta">…the wrath of God is revealed from heaven against all ungodliness. Paul begins his explanation of the gospel with the bad news, because without it the good news makes no sense…</div></div>
+            <div class="fld"><label>Series</label><div class="inp">The Glory of the Gospel</div></div>
+          </div>
+          <div class="side">
+            <div class="card box"><h5>Information</h5><div class="kv"><span>Created</span><span>Mar 2, 2021</span></div><div class="kv"><span>Last update</span><span>Oct 30, 2026</span></div></div>
+            <div class="card box inj">
+              <h5>Scripture Map</h5>
+              <div class="plk"><b>Romans 1:18–23</b><span><span class="pp q3">●●●</span> Primary · suggested</span></div>
+              <div class="plk"><b>Psalm 19:1</b><span><span class="pp q1">●○○</span> Mention · suggested</span></div>
+              <div class="acts" style="margin-top:8px"><span class="btn ok sm">Approve both</span><span class="btn sm">Review →</span></div>
+              <div class="m" style="margin-top:8px">The Scripture field is vague. These passages come from the transcript.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div></div>
+  </div>
+
+  <div class="plate">
+    <div class="cap"><span class="eyebrow">Book</span><h3>Bible tab: Genesis, chapter by chapter</h3><p>The second way in. The same chart, one bar per chapter. Resources that cover the whole book, like a series, sit above it. The table lists chapters that need work, with busy and thin chapters first.</p></div>
     <div class="scroll"><div class="sx">
       <div class="nav"><div class="ws"><b>G</b><div>GTY Core<small>Workplace</small></div></div>
         <span>Content Manager</span><span>Media Library</span>
@@ -342,6 +483,7 @@ header.hero{padding-block:64px 40px;display:grid;gap:22px}
       <div class="main">
         <div class="crumb">Scripture Map › Genesis</div>
         <div class="head"><div><h4>Genesis</h4><div class="sub">50 chapters · 210 resources linked · 31 suggestions waiting</div></div><div class="acts"><span class="btn">Open in API</span><span class="btn pri">Review Genesis (31) →</span></div></div>
+        <div class="tabs"><span>Home</span><span>Resources</span><span class="on">Bible</span><span>Review</span></div>
         <div class="card">
           <div class="ch"><h5>Covers the whole book</h5><span>shown for /Genesis</span></div>
           <div class="it"><div><div class="t">Genesis: The Beginning</div><div class="m"><span class="tag">Series</span>Genesis 1:1–50:26 · <span class="pp q3">●●●</span> Primary · 📌 pinned</div></div><span class="chip good">Approved</span><span class="btn sm">Open</span></div>
@@ -369,7 +511,7 @@ header.hero{padding-block:64px 40px;display:grid;gap:22px}
   </div>
 
   <div class="plate">
-    <div class="cap"><span class="eyebrow">Passage</span><h3>Genesis 1, verse by verse</h3><p>Each square is a verse, shaded by how many approved resources it has. Click a verse to see its resources by strength. The top 3 are what the site shows. Drag to reorder them. Click verses 1, 2 or 3 to try it.</p></div>
+    <div class="cap"><span class="eyebrow">Passage</span><h3>Bible tab: Genesis 1, verse by verse</h3><p>Each square is a verse, shaded by how many approved resources it has. Click a verse to see its resources by strength. The top 3 are what the site shows. Drag to reorder them. Click verses 1, 2 or 3 to try it.</p></div>
     <div class="scroll"><div class="sx">
       <div class="nav"><div class="ws"><b>G</b><div>GTY Core<small>Workplace</small></div></div>
         <span>Content Manager</span><span>Media Library</span>
@@ -378,6 +520,7 @@ header.hero{padding-block:64px 40px;display:grid;gap:22px}
       <div class="main">
         <div class="crumb">Scripture Map › Genesis › 1</div>
         <div class="head"><div><h4 id="pvTitle">Genesis 1:1</h4><div class="sub" id="pvSub">7 approved · 2 suggestions waiting · site shows 3, then More (4)</div></div><div class="acts"><span class="btn">Preview on site</span><span class="btn pri">Add resource</span></div></div>
+        <div class="tabs"><span>Home</span><span>Resources</span><span class="on">Bible</span><span>Review</span></div>
         <div class="card">
           <div class="ch"><h5>Genesis 1 · 31 verses</h5><span class="lvl">Show for: <span class="seg"><button aria-pressed="true" type="button">Verse</button><button aria-pressed="false" type="button">Chapter</button><button aria-pressed="false" type="button">Book</button></span></span></div>
           <div class="verses" id="verses"></div>
@@ -389,15 +532,15 @@ header.hero{padding-block:64px 40px;display:grid;gap:22px}
   </div>
 
   <div class="plate">
-    <div class="cap"><span class="eyebrow">Review</span><h3>One resource at a time</h3><p>The main editor task. The transcript is on the left, highlighted where the agent found evidence. The agent's suggestions are on the right. Pick a strength or Remove for each, then save. Keyboard: 1–3 sets the strength, X removes, Enter saves and moves on.</p></div>
+    <div class="cap"><span class="eyebrow">Review</span><h3>One resource at a time</h3><p>Opened from Resources, so it steps through the current filter in order: here, the Romans series. The transcript is on the left, highlighted where the agent found evidence. The agent's suggestions are on the right. Pick a strength or Remove for each, then save. Keyboard: 1–3 sets the strength, X removes, Enter saves and moves on.</p></div>
     <div class="scroll"><div class="sx">
       <div class="nav"><div class="ws"><b>G</b><div>GTY Core<small>Workplace</small></div></div>
         <span>Content Manager</span><span>Media Library</span>
         <div class="g">PLUGINS</div><span>Broadcast Calendar</span><span>Content Sync</span><span class="on">Scripture Map</span>
         <div class="g">GENERAL</div><span>Settings</span></div>
       <div class="main">
-        <div class="head"><div class="crumb">Scripture Map › Review</div><div class="prog">34 of 812<span class="pb"><i></i></span></div></div>
-        <div class="head"><div><h4>The God Who Speaks</h4><div class="sub">Sermon · 1984 · 41 min · Scripture field: <b>“Selected Scriptures”</b></div></div><span class="btn">Open in Content Manager ↗</span></div>
+        <div class="head"><div class="crumb">Scripture Map › Review</div><div class="prog">3 of 9 · Romans series<span class="pb"><i style="width:33%"></i></span></div></div>
+        <div class="head"><div><h4>The God Who Speaks</h4><div class="sub">Sermon · 1984 · 41 min · Scripture field: <b>“Selected Scriptures”</b> · <span style="color:var(--n500)">sample transcript</span></div></div><span class="btn">Open in Content Manager ↗</span></div>
         <div class="flag">The Scripture field doesn't name a passage, so the agent read the transcript and found three.</div>
         <div class="two">
           <div class="card">
@@ -502,7 +645,7 @@ header.hero{padding-block:64px 40px;display:grid;gap:22px}
   </div>
   <ol class="phases">
     <li><span class="k">P1</span><div><b>Links table and import</b><span>Verse numbering, a reference parser, the scripture-link collection, an import from specific Scripture fields, and the read API.</span></div></li>
-    <li><span class="k">P2</span><div><b>Home, Book and Passage screens</b><span>Browse coverage, approve imported links, and pin the top 3.</span></div></li>
+    <li><span class="k">P2</span><div><b>Resources screen and Content Manager panel</b><span>Filter and work through content, approve imported links, and see passages while editing. Then the Bible tab for pinning the top 3.</span></div></li>
     <li><span class="k">P3</span><div><b>Agents and Review</b><span>Agents read sermon transcripts first. Quote checks, the Review screen, and reasons on every rejection.</span></div></li>
     <li><span class="k">P4</span><div><b>Accuracy set</b><span>Editors label about 100 passages by hand. Every agent change is scored on how many of its top 3 picks match before its suggestions reach the queue.</span></div></li>
     <li><span class="k">P5</span><div><b>Everything else</b><span>Articles, blogs and Q&amp;As, gap-filling for thin passages, caching, and other languages.</span></div></li>
@@ -576,6 +719,15 @@ header.hero{padding-block:64px 40px;display:grid;gap:22px}
       <div class="grp">Mentions (${d.mention})<em>not shown on the site · expand</em></div>`;
   }
   select(1);
+
+  // Resources: type filter
+  const tf=document.getElementById("typeFilter"), rows=[...document.querySelectorAll("#resTable tbody tr")];
+  tf.querySelectorAll("button").forEach(b=>b.onclick=()=>{
+    tf.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false"));
+    const t=b.dataset.t;
+    rows.filter(r=>!r.classList.contains("gh")).forEach(r=>r.hidden=!(t==="all"||r.dataset.t===t));
+    rows.filter(r=>r.classList.contains("gh")).forEach(g=>g.hidden=!rows.some(r=>!r.classList.contains("gh")&&r.dataset.g===g.dataset.g&&!r.hidden));
+  });
 
   // Review: strength picker
   document.querySelectorAll(".sugg").forEach(s=>{
