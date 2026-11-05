@@ -291,11 +291,24 @@ header.hero{padding-block:64px 40px;display:grid;gap:22px}
 }
 @media (max-width:460px){ .flow{grid-template-columns:1fr} }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+/* page switcher */
+.pages{display:flex;gap:6px;flex-wrap:wrap;padding-top:20px;font:500 13px/1 var(--mono)}
+.pages a{padding:7px 12px;border:1px solid var(--rule);border-radius:999px;text-decoration:none;color:var(--ink);background:var(--surface)}
+.pages a.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.pages a.opt{border-style:dashed}
+/* topics */
+.sx .tt td.ind{padding-left:32px}
+.sx .mb{display:flex;height:8px;border-radius:4px;overflow:hidden;background:var(--n100);width:100%}
+.sx .mb i{display:block;height:100%}
+.sx .chip.dup{background:#F3ECFC;border-color:#DCC6F5;color:#7B2FC2}
+.sx .sugg.new{border-style:dashed;border-color:#C9A8EE;background:#FCFAFF}
+.sx .tt td .acts{gap:6px}
 </style>
 </head>
 <body>
 
 <div class="wrap">
+<nav class="pages" aria-label="Proposal pages"><a href="./" class="on" aria-current="page">Scripture Map</a><a href="topics.html" class="opt">Topics option</a></nav>
 <header class="hero">
   <div class="eyebrow">Strapi plugin proposal · gty-core</div>
   <h1>Scripture Map</h1>
@@ -640,7 +653,7 @@ header.hero{padding-block:64px 40px;display:grid;gap:22px}
 <section>
   <div class="col stack">
     <div class="eyebrow">Plan</div>
-    <h2>Build it in five phases</h2>
+    <h2>Build it in five phases, plus an option</h2>
     <p>Each phase ships something editors can use. The first phase already gives the site real results, from the Scripture fields that name a specific passage.</p>
   </div>
   <ol class="phases">
@@ -649,6 +662,7 @@ header.hero{padding-block:64px 40px;display:grid;gap:22px}
     <li><span class="k">P3</span><div><b>Agents and Review</b><span>Agents read sermon transcripts first. Quote checks, the Review screen, and reasons on every rejection.</span></div></li>
     <li><span class="k">P4</span><div><b>Accuracy set</b><span>Editors label about 100 passages by hand. Every agent change is scored on how many of its top 3 picks match before its suggestions reach the queue.</span></div></li>
     <li><span class="k">P5</span><div><b>Everything else</b><span>Articles, blogs and Q&amp;As, gap-filling for thin passages, caching, and other languages.</span></div></li>
+    <li><span class="k">+</span><div><b>Option: topics</b><span>The same flow for adding and checking topics on resources. See the <a href="topics.html">Topics option</a> page.</span></div></li>
   </ol>
 </section>
 
