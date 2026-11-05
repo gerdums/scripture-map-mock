@@ -1,0 +1,589 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{color-scheme:light}body{margin:0;font-size:14px}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Scripture Map</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: a proposal document. Prose sits in a ~68ch reading column; each admin screen breaks out wider as a framed plate. */
+:root{
+  --paper:#F6F6FA; --surface:#FFFFFF; --ink:#1B1B30; --ink-2:#55556F; --rule:#DADAE6;
+  --accent:#4945FF; --accent-soft:#E9E9FF; --accent-ink:#3432C8;
+  --strong:#4945FF; --mid:#A3A1FF; --faint:#D9D9E6;
+  --ok:#2E7D46; --wait:#C46A12;
+  --code-bg:#1E1E36; --code-ink:#E6E6F5;
+  --display:"Spectral", "Iowan Old Style", Georgia, serif;
+  --body:"IBM Plex Sans", -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --paper:#111120; --surface:#1A1A2D; --ink:#ECECF7; --ink-2:#A6A6C2; --rule:#30304A;
+    --accent:#8C8AFF; --accent-soft:#25254A; --accent-ink:#B7B6FF;
+    --strong:#8C8AFF; --mid:#57559E; --faint:#3A3A55; --ok:#5CC27A; --wait:#E8A04E;
+    --code-bg:#0B0B16; --code-ink:#E6E6F5;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --paper:#111120; --surface:#1A1A2D; --ink:#ECECF7; --ink-2:#A6A6C2; --rule:#30304A;
+  --accent:#8C8AFF; --accent-soft:#25254A; --accent-ink:#B7B6FF;
+  --strong:#8C8AFF; --mid:#57559E; --faint:#3A3A55; --ok:#5CC27A; --wait:#E8A04E;
+  --code-bg:#0B0B16; --code-ink:#E6E6F5;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font:16px/1.6 var(--body);margin:0;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:0 64px}
+.wrap{max-width:1080px;margin:0 auto}
+.col{max-width:68ch}
+a{color:var(--accent-ink)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;color:var(--ink);margin:0}
+h1{font-size:clamp(40px,6vw,64px);line-height:1.02;font-weight:700;letter-spacing:-.01em}
+h2{font-size:30px;line-height:1.15;font-weight:600}
+h3{font-size:20px;line-height:1.25;font-weight:600}
+p{margin:0}
+.eyebrow{font:600 12px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+.ref{font-family:var(--mono);font-size:.92em}
+section{display:grid;gap:20px;padding-block:56px 8px;border-top:1px solid var(--rule)}
+section:first-of-type{border-top:0}
+.stack{display:grid;gap:14px}
+.lede{font-size:19px;color:var(--ink-2);max-width:60ch}
+
+/* hero */
+header.hero{padding-block:64px 40px;display:grid;gap:22px}
+.meta{display:flex;flex-wrap:wrap;gap:8px 18px;font:500 13px/1.4 var(--mono);color:var(--ink-2)}
+.meta b{color:var(--ink);font-weight:600}
+.verse-id{display:flex;flex-wrap:wrap;align-items:stretch;gap:0;font-family:var(--mono);margin-top:8px;border:1px solid var(--rule);border-radius:6px;overflow:hidden;width:max-content;max-width:100%;background:var(--surface)}
+.verse-id div{padding:10px 14px;border-right:1px solid var(--rule);display:grid;gap:2px}
+.verse-id div:last-child{border-right:0}
+.verse-id b{font-size:22px;font-weight:600;color:var(--accent-ink);letter-spacing:.04em}
+.verse-id small{font-size:11px;color:var(--ink-2);letter-spacing:.06em;text-transform:uppercase}
+
+/* strength scale */
+.scale{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--rule);border-radius:8px;overflow:hidden;background:var(--surface)}
+.scale>div{padding:18px;display:grid;gap:8px;align-content:start;border-right:1px solid var(--rule)}
+.scale>div:last-child{border-right:0}
+.pips{font-size:15px;letter-spacing:2px;line-height:1}
+.p3{color:var(--strong)}.p2{color:var(--mid)}.p1{color:var(--faint)}
+.scale h3{font-size:19px}
+.scale p{font-size:14.5px;color:var(--ink-2)}
+.scale .where{font:500 12px/1.4 var(--mono);color:var(--ink)}
+
+/* flow */
+.flow{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;counter-reset:step}
+.step{background:var(--surface);border:1px solid var(--rule);border-radius:8px;padding:16px;display:grid;gap:8px;align-content:start;position:relative}
+.step .n{font:600 12px/1 var(--mono);color:var(--accent-ink)}
+.step h3{font-size:18px}
+.step p{font-size:14px;color:var(--ink-2)}
+.step .who{font:500 11.5px/1.3 var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--ink);border-top:1px solid var(--rule);padding-top:8px;margin-top:2px}
+.step.human{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.states{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font:500 13px/1 var(--mono)}
+.st{padding:6px 10px;border-radius:999px;border:1px solid var(--rule);background:var(--surface)}
+.st.a{border-color:var(--accent);color:var(--accent-ink)}
+.arrow{color:var(--ink-2)}
+.rules{display:grid;grid-template-columns:repeat(2,1fr);gap:12px 28px;margin:0;padding:0;list-style:none}
+.rules li{display:grid;gap:2px;padding-left:16px;border-left:2px solid var(--rule)}
+.rules b{font-weight:600}
+.rules span{color:var(--ink-2);font-size:14.5px}
+
+/* plates */
+.plate{display:grid;gap:12px}
+.plate .cap{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;align-items:baseline}
+.plate .cap .eyebrow{grid-row:span 2;padding-top:6px}
+.plate .cap p{color:var(--ink-2);max-width:72ch}
+.scroll{overflow-x:auto;border-radius:10px;border:1px solid var(--rule);background:var(--surface)}
+.scroll::-webkit-scrollbar{height:8px}
+
+/* ---------- Strapi admin screens: fixed light palette, these are screenshots of the v4 admin ---------- */
+.sx{--p:#4945FF;--p2:#A3A1FF;--p3:#ECECFF;--n0:#fff;--n100:#F6F6F9;--n150:#EAEAEF;--n200:#DCDCE4;--n500:#8E8EA9;--n600:#666687;--n800:#32324D;--n900:#212134;--g:#328048;--gb:#EAFBE7;--gbd:#C6F0C2;--o:#D9822B;--ob:#FDF4DC;--obd:#FAE7B9;--r:#D02B20;
+  min-width:880px;display:flex;font:13px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--n800);background:var(--n100);color-scheme:light}
+.sx .nav{width:168px;flex:none;background:var(--n0);border-right:1px solid var(--n150);padding:14px 10px}
+.sx .ws{display:flex;gap:8px;align-items:center;padding:0 6px 12px;border-bottom:1px solid var(--n150);margin-bottom:10px}
+.sx .ws b{width:28px;height:28px;border-radius:6px;background:var(--p);color:#fff;display:grid;place-items:center;font-size:12px}
+.sx .ws div{font-size:12.5px;font-weight:600;line-height:1.2}.sx .ws small{display:block;color:var(--n600);font-weight:400;font-size:11px}
+.sx .g{font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--n600);margin:14px 8px 4px}
+.sx .nav span{display:block;padding:6px 8px;border-radius:4px;font-size:12.5px}
+.sx .nav span.on{background:var(--p3);color:var(--p);font-weight:700}
+.sx .main{flex:1;min-width:0;padding:20px 24px 24px;display:grid;gap:14px;align-content:start}
+.sx .crumb{font-size:11.5px;color:var(--n600)}
+.sx .head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.sx h4{margin:0;font-size:24px;font-weight:700;color:var(--n900);line-height:1.2;font-family:inherit}
+.sx .sub{color:var(--n600);font-size:12.5px;margin-top:2px}
+.sx .btn{display:inline-flex;align-items:center;gap:6px;background:var(--n0);border:1px solid var(--n200);color:var(--n800);border-radius:4px;padding:7px 12px;font:600 12px/1.2 inherit;white-space:nowrap;cursor:pointer}
+.sx .btn.pri{background:var(--p);border-color:var(--p);color:#fff}
+.sx .btn.ok{background:var(--gb);border-color:var(--gbd);color:var(--g)}
+.sx .btn.sm{padding:4px 9px;font-size:11.5px}
+.sx .acts{display:flex;gap:8px;flex-wrap:wrap}
+.sx .search{display:flex;align-items:center;gap:8px;background:var(--n0);border:1px solid var(--n200);border-radius:4px;padding:9px 12px;color:var(--n500)}
+.sx kbd{font:11px ui-monospace,Menlo,monospace;background:var(--n100);border:1px solid var(--n200);border-radius:3px;padding:0 5px;color:var(--n600)}
+.sx .search kbd{margin-left:auto}
+.sx .card{background:var(--n0);border-radius:4px;box-shadow:0 1px 4px rgba(33,33,52,.1);padding:16px}
+.sx .card.flush{padding:0}
+.sx .ch{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:12px}
+.sx .ch h5{margin:0;font-size:13.5px;color:var(--n900)}
+.sx .ch span{font-size:11.5px;color:var(--n600)}
+.sx .track{display:flex;height:14px;border-radius:7px;overflow:hidden;margin-bottom:10px}
+.sx .track i{display:block}
+.sx .keys{display:flex;gap:18px;flex-wrap:wrap;font-size:12.5px}
+.sx .keys span{display:flex;align-items:center;gap:6px}
+.sx .sw{width:10px;height:10px;border-radius:3px;display:inline-block}
+.sx .chart{display:flex;align-items:flex-end;gap:2px;border-bottom:1px solid var(--n200)}
+.sx .bar{flex:1;display:flex;flex-direction:column-reverse;border-radius:2px 2px 0 0;overflow:hidden;cursor:pointer}
+.sx .bar:hover,.sx .bar.sel{outline:2px solid var(--n900)}
+.sx .bar i{display:block}
+.sx .axis{position:relative;height:30px;font-size:10.5px;color:var(--n600);margin-top:4px}
+.sx .axis b{position:absolute;transform:translateX(-50%);font-weight:600}
+.sx .axis .sec{position:absolute;top:15px;font-size:10px;letter-spacing:.05em;color:var(--n500);border-top:1px solid var(--n200);padding-top:2px;text-align:center}
+.sx .legend{display:flex;gap:18px;flex-wrap:wrap;font-size:12px;margin-top:4px}
+.sx .legend span{display:flex;gap:6px;align-items:center}
+.sx .legend em{font-style:normal;color:var(--n600)}
+.sx .pp{letter-spacing:1px;font-size:11px}
+.sx .q3{color:var(--p)}.sx .q2{color:var(--p2)}.sx .q1{color:#B9B9CF}
+.sx .tip{font-size:12px;color:var(--n600);min-height:18px;margin-top:6px}
+.sx .tip b{color:var(--n900)}
+.sx .it{display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center;padding:10px 0;border-top:1px solid var(--n150)}
+.sx .it:first-of-type{border-top:0;padding-top:0}
+.sx .t{font-weight:600;color:var(--n900)}
+.sx .m{font-size:11.5px;color:var(--n600);display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:2px}
+.sx .tag{font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;text-transform:uppercase;letter-spacing:.03em;background:var(--n150);color:var(--n800)}
+.sx .chip{font-size:10.5px;font-weight:600;border-radius:10px;padding:1px 8px;border:1px solid var(--n200);color:var(--n600);background:var(--n0)}
+.sx .chip.good{background:var(--gb);border-color:var(--gbd);color:var(--g)}
+.sx .chip.thin{background:var(--ob);border-color:var(--obd);color:#A65A00}
+.sx .chip.empty{background:#FCECEA;border-color:#F5C0B8;color:var(--r)}
+.sx table{width:100%;border-collapse:collapse;font-size:12.5px;font-variant-numeric:tabular-nums}
+.sx th{text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--n600);font-weight:700;padding:9px 16px;border-bottom:1px solid var(--n150)}
+.sx td{padding:9px 16px;border-bottom:1px solid var(--n150)}
+.sx tr:last-child td{border-bottom:0}
+.sx .two{display:grid;grid-template-columns:1fr 1.2fr;gap:14px}
+.sx .seg{display:inline-flex;border:1px solid var(--n200);border-radius:4px;overflow:hidden;background:var(--n0)}
+.sx .seg button{border:0;border-right:1px solid var(--n200);background:none;padding:5px 8px;font:600 11px/1.2 inherit;color:var(--n600);cursor:pointer;white-space:nowrap}
+.sx .seg button:last-child{border-right:0}
+.sx .seg button[aria-pressed="true"]{background:var(--p);color:#fff}
+.sx .seg button.rm[aria-pressed="true"]{background:var(--r)}
+/* verse strip */
+.sx .verses{display:grid;grid-template-columns:repeat(31,1fr);gap:3px}
+.sx .vc{height:34px;border-radius:3px;display:grid;place-items:center;font:600 10.5px/1 ui-monospace,Menlo,monospace;color:var(--n800);cursor:pointer;border:0}
+.sx .vc.l0{background:#FCECEA;color:var(--r)}.sx .vc.l1{background:#ECECFF}.sx .vc.l2{background:#C9C8FF}.sx .vc.l3{background:#8E8CFF;color:#fff}.sx .vc.l4{background:var(--p);color:#fff}
+.sx .vc[aria-pressed="true"]{outline:2px solid var(--n900);outline-offset:1px}
+.sx .vtext{font:15px/1.5 Georgia,serif;color:var(--n900);margin-top:12px}
+.sx .vtext small{font:600 11px/1 -apple-system,sans-serif;color:var(--n600);margin-right:8px;letter-spacing:.04em}
+.sx .grp{font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--n600);padding:10px 16px;background:var(--n100);border-top:1px solid var(--n150);border-bottom:1px solid var(--n150);display:flex;justify-content:space-between}
+.sx .grp:first-child{border-top:0;border-radius:4px 4px 0 0}
+.sx .grp em{font-style:normal;text-transform:none;letter-spacing:0;font-weight:500}
+.sx .rw{display:grid;grid-template-columns:16px 1fr auto;gap:10px;align-items:center;padding:10px 16px;border-bottom:1px solid var(--n150)}
+.sx .rw:last-child{border-bottom:0}
+.sx .grip{color:#C0C0CF;letter-spacing:-2px;font-size:12px}
+.sx .lvl{display:flex;gap:8px;align-items:center;font-size:12px;color:var(--n600)}
+/* review */
+.sx .prog{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--n600)}
+.sx .prog .pb{width:180px;height:6px;border-radius:3px;background:var(--n150);overflow:hidden}
+.sx .prog .pb i{display:block;height:100%;width:4%;background:var(--p)}
+.sx .flag{background:var(--ob);border:1px solid var(--obd);border-radius:4px;padding:8px 12px;font-size:12px}
+.sx .tx{font-size:12.5px;line-height:1.65;color:#4A4A6A;display:grid;gap:8px}
+.sx .ts{font:10.5px ui-monospace,Menlo,monospace;color:var(--n500);margin-right:6px}
+.sx .h1{background:#E9E9FF;border-bottom:2px solid var(--p)}
+.sx .h2{background:#F1F1FF;border-bottom:2px solid var(--p2)}
+.sx .h3{background:var(--n150);border-bottom:2px dotted var(--n500)}
+.sx .sugg{border:1px solid var(--n200);border-radius:4px;padding:12px;display:grid;gap:8px}
+.sx .sugg .top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.sx .sugg .ref{font-weight:700;color:var(--n900);font-size:14px;font-family:inherit}
+.sx .ev{font-size:11.5px;color:var(--n600)}
+.sx .ev b{color:var(--g);font-weight:600}
+.sx .foot{display:flex;justify-content:space-between;align-items:center;gap:10px;border-top:1px solid var(--n200);padding-top:14px;flex-wrap:wrap}
+.sx .hint{font-size:11.5px;color:var(--n600);display:flex;gap:12px;flex-wrap:wrap}
+
+/* API plate */
+.api{display:grid;grid-template-columns:1.05fr 1fr;gap:0;min-width:880px}
+.api pre{margin:0;background:var(--code-bg);color:var(--code-ink);font:12.5px/1.6 var(--mono);padding:20px 22px;overflow:auto}
+.api pre .k{color:#A8A6FF}.api pre .s{color:#9EE0B0}.api pre .c{color:#8A8AA8}
+.site{background:#FBFAF7;color:#222;padding:22px;font-family:Georgia,"Times New Roman",serif;display:grid;gap:14px;align-content:start;color-scheme:light}
+.site h6{margin:0;font:600 12px/1 -apple-system,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#6B6B6B}
+.site .vs{font-size:20px;line-height:1.35}
+.site .cards{display:grid;gap:10px}
+.site .rc{background:#fff;border:1px solid #E6E3DC;border-radius:6px;padding:12px 14px;display:grid;gap:3px}
+.site .rc small{font:700 10px/1 -apple-system,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#7A6F5B}
+.site .rc b{font-size:16px;font-weight:600}
+.site .rc span{font:12px/1.3 -apple-system,sans-serif;color:#6B6B6B}
+.site .more{justify-self:start;font:600 13px/1 -apple-system,sans-serif;border:1px solid #222;border-radius:999px;padding:9px 16px;background:none;color:#222}
+
+/* data model */
+.fields{width:100%;border-collapse:collapse;font-size:14.5px}
+.fields th,.fields td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--rule);vertical-align:top}
+.fields th{font:600 11.5px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
+.fields td:first-child{font-family:var(--mono);font-size:13px;white-space:nowrap;color:var(--accent-ink)}
+.fields td:last-child{color:var(--ink-2)}
+.formula{font:500 15px/1.5 var(--mono);background:var(--surface);border:1px solid var(--rule);border-radius:8px;padding:14px 16px;overflow-x:auto}
+.phases{list-style:none;margin:0;padding:0;display:grid;gap:0;border-left:2px solid var(--rule)}
+.phases li{display:grid;grid-template-columns:56px 1fr;gap:12px;padding:12px 0 12px 16px;position:relative}
+.phases li:before{content:"";position:absolute;left:-7px;top:19px;width:12px;height:12px;border-radius:50%;background:var(--paper);border:2px solid var(--accent)}
+.phases .k{font:600 13px/1.6 var(--mono);color:var(--accent-ink)}
+.phases b{display:block}
+.phases span{color:var(--ink-2);font-size:14.5px}
+.qs{display:grid;gap:10px;margin:0;padding-left:20px}
+.qs li{padding-left:4px}
+.note{font:13px/1.5 var(--mono);color:var(--ink-2)}
+
+@media (max-width:820px){
+  .flow{grid-template-columns:1fr 1fr}
+  .scale{grid-template-columns:1fr}
+  .scale>div{border-right:0;border-bottom:1px solid var(--rule)}
+  .scale>div:last-child{border-bottom:0}
+  .rules{grid-template-columns:1fr}
+  .plate .cap{grid-template-columns:1fr}
+  .plate .cap .eyebrow{grid-row:auto}
+}
+@media (max-width:460px){ .flow{grid-template-columns:1fr} }
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+<header class="hero">
+  <div class="eyebrow">Strapi plugin proposal · gty-core</div>
+  <h1>Scripture Map</h1>
+  <p class="lede">A Strapi plugin where agents read every sermon, article, blog and Q&amp;A, suggest the Bible passages each one teaches, and editors decide. The approved links power one API: <span class="ref">/Genesis/1/1</span>, <span class="ref">/Genesis/1</span> or <span class="ref">/Genesis</span>.</p>
+  <div class="meta"><span><b>Status</b> design proposal</span><span><b>Admin</b> Strapi 4.25</span><span><b>Data on this page</b> sample only</span></div>
+  <div class="verse-id" aria-label="How Genesis 1:1 is stored as a verse number">
+    <div><small>Book</small><b>01</b></div><div><small>Chapter</small><b>001</b></div><div><small>Verse</small><b>001</b></div><div><small>Stored as</small><b>01001001</b></div>
+  </div>
+</header>
+
+<section>
+  <div class="col stack">
+    <div class="eyebrow">How strongly related</div>
+    <h2>Every link has one of three strengths</h2>
+    <p>Agents and editors don't score resources from 0 to 100. They pick one of three strengths. That's easier to agree on, easier to review, and it decides what the website shows.</p>
+  </div>
+  <div class="scale">
+    <div><span class="pips p3">●●●</span><h3>Primary</h3><p>The resource teaches this passage. A sermon on Genesis 1:1–3 is primary for those verses.</p><span class="where">Shown on the site, first</span></div>
+    <div><span class="pips p2">●●○</span><h3>Substantial</h3><p>A real section of the resource treats the passage, but it isn't the main text.</p><span class="where">Shown on the site, after primary</span></div>
+    <div><span class="pips p1">●○○</span><h3>Mention</h3><p>Quoted or cited in passing. Kept for search and for editors.</p><span class="where">Never shown on the site</span></div>
+  </div>
+</section>
+
+<section>
+  <div class="col stack">
+    <div class="eyebrow">Workflow</div>
+    <h2>Agents suggest, editors decide</h2>
+    <p>Each resource moves through five steps. Agents do the reading at scale. Only an editor can approve a link, and agents never overwrite an editor's decision.</p>
+  </div>
+  <div class="flow">
+    <div class="step"><span class="n">1</span><h3>Import</h3><p>Read the existing Scripture field. Specific references like “Genesis 1:1–5” become suggestions. “Selected Scriptures” or a blank field sends the resource to step 2.</p><span class="who">Script</span></div>
+    <div class="step"><span class="n">2</span><h3>Read</h3><p>An agent reads the transcript or article and suggests passages with a strength, a quote as evidence, and how much of the resource dwells on each.</p><span class="who">Agent</span></div>
+    <div class="step"><span class="n">3</span><h3>Check</h3><p>Code confirms every quote appears in the source text. A second model weighs in on low-confidence suggestions. Failed checks are dropped.</p><span class="who">Code + second agent</span></div>
+    <div class="step human"><span class="n">4</span><h3>Decide</h3><p>An editor approves, changes the strength or range, or rejects with a reason. Editors also pin the top 3 for busy passages.</p><span class="who">Editor</span></div>
+    <div class="step"><span class="n">5</span><h3>Publish</h3><p>Approved links go live in the API right away. The site shows 3 per passage, with More when there are more.</p><span class="who">API</span></div>
+  </div>
+  <div class="states" aria-label="Resource states">
+    <span class="st">Not analyzed</span><span class="arrow">→</span><span class="st">Suggestions waiting</span><span class="arrow">→</span><span class="st a">Reviewed</span><span class="arrow">or</span><span class="st a">No main passage</span>
+  </div>
+  <ul class="rules">
+    <li><b>Agents never approve.</b><span>They write suggestions only. An editor approval is the only way a link reaches the site, at least until the agents' accuracy is proven.</span></li>
+    <li><b>Editors always win.</b><span>Re-running an agent never changes a link an editor approved, rejected, re-ranked or edited.</span></li>
+    <li><b>Evidence or nothing.</b><span>Every suggestion carries a quote and a timestamp or paragraph. A quote that isn't in the source text is dropped automatically.</span></li>
+    <li><b>Topical is a real answer.</b><span>“No main passage” closes a resource, so it doesn't keep coming back to the queue.</span></li>
+  </ul>
+</section>
+
+<section>
+  <div class="col stack">
+    <div class="eyebrow">Screens</div>
+    <h2>Five screens in the Strapi admin</h2>
+    <p>The plugin gets its own entry under Plugins. Home answers three questions: how far along we are, where in the Bible we have content, and what needs an editor. Every other screen is one click from Home. On a phone, scroll each screen sideways.</p>
+  </div>
+
+  <div class="plate">
+    <div class="cap"><span class="eyebrow">Home</span><h3>Start here</h3><p>The bar shows progress across every resource. The chart shows linked resources per book, split by strength. Hover a book to see its numbers. Click one to open it.</p></div>
+    <div class="scroll"><div class="sx">
+      <div class="nav"><div class="ws"><b>G</b><div>GTY Core<small>Workplace</small></div></div>
+        <span>Content Manager</span><span>Media Library</span>
+        <div class="g">PLUGINS</div><span>Broadcast Calendar</span><span>Content Sync</span><span class="on">Scripture Map</span>
+        <div class="g">GENERAL</div><span>Settings</span></div>
+      <div class="main">
+        <div class="head"><div><h4>Scripture Map</h4><div class="sub">Which GTY resources teach which Bible passages, and how strongly.</div></div><span class="btn pri">Review 812 →</span></div>
+        <div class="search">⌕ Go to a passage or resource, like “Genesis 1:1” or “Romans 8”<kbd>⌘K</kbd></div>
+        <div class="card">
+          <div class="ch"><h5>Your 4,812 resources</h5><span>sermons, articles, blogs, Q&amp;As, devotionals, study guides</span></div>
+          <div class="track"><i style="width:62%;background:var(--g)"></i><i style="width:17%;background:var(--o)"></i><i style="width:21%;background:var(--n200)"></i></div>
+          <div class="keys"><span><i class="sw" style="background:var(--g)"></i><b>2,980</b> reviewed</span><span><i class="sw" style="background:var(--o)"></i><b>812</b> suggestions waiting for an editor</span><span><i class="sw" style="background:var(--n200)"></i><b>1,020</b> not analyzed yet</span></div>
+        </div>
+        <div class="card">
+          <div class="ch"><h5>Across the Bible</h5><span>resources linked to each book</span></div>
+          <div class="chart" id="bookChart" style="height:110px"></div>
+          <div class="axis" id="bookAxis"></div>
+          <div class="legend"><span><span class="pp q3">●●●</span>Primary</span><span><span class="pp q2">●●○</span>Substantial</span><span><span class="pp q1">●○○</span>Mention <em>not shown on site</em></span></div>
+          <div class="tip" id="bookTip">Hover a book to see its numbers.</div>
+        </div>
+        <div class="card">
+          <div class="ch"><h5>Waiting for you</h5><span>most-read passages first</span></div>
+          <div class="it"><div><div class="t">The God Who Speaks</div><div class="m"><span class="tag">Sermon</span>→ Genesis 1:1–3 · <span class="pp q3">●●●</span> Primary</div></div><span class="btn ok sm">Approve</span><span class="btn sm">Change</span></div>
+          <div class="it"><div><div class="t">Faith Credited as Righteousness</div><div class="m"><span class="tag">Article</span>→ Genesis 15:6 · <span class="pp q2">●●○</span> Substantial</div></div><span class="btn ok sm">Approve</span><span class="btn sm">Change</span></div>
+          <div class="it"><div><div class="t">What Did Joseph Mean by “God Meant It for Good”?</div><div class="m"><span class="tag">Q&amp;A</span>→ Genesis 50:20 · <span class="pp q3">●●●</span> Primary</div></div><span class="btn ok sm">Approve</span><span class="btn sm">Change</span></div>
+        </div>
+      </div>
+    </div></div>
+  </div>
+
+  <div class="plate">
+    <div class="cap"><span class="eyebrow">Book</span><h3>Genesis, chapter by chapter</h3><p>The same chart, one bar per chapter. Resources that cover the whole book, like a series, sit above it. The table lists chapters that need work, with busy and thin chapters first.</p></div>
+    <div class="scroll"><div class="sx">
+      <div class="nav"><div class="ws"><b>G</b><div>GTY Core<small>Workplace</small></div></div>
+        <span>Content Manager</span><span>Media Library</span>
+        <div class="g">PLUGINS</div><span>Broadcast Calendar</span><span>Content Sync</span><span class="on">Scripture Map</span>
+        <div class="g">GENERAL</div><span>Settings</span></div>
+      <div class="main">
+        <div class="crumb">Scripture Map › Genesis</div>
+        <div class="head"><div><h4>Genesis</h4><div class="sub">50 chapters · 210 resources linked · 31 suggestions waiting</div></div><div class="acts"><span class="btn">Open in API</span><span class="btn pri">Review Genesis (31) →</span></div></div>
+        <div class="card">
+          <div class="ch"><h5>Covers the whole book</h5><span>shown for /Genesis</span></div>
+          <div class="it"><div><div class="t">Genesis: The Beginning</div><div class="m"><span class="tag">Series</span>Genesis 1:1–50:26 · <span class="pp q3">●●●</span> Primary · 📌 pinned</div></div><span class="chip good">Approved</span><span class="btn sm">Open</span></div>
+          <div class="it"><div><div class="t">Genesis Study Guide</div><div class="m"><span class="tag">Study guide</span>Genesis 1–50 · <span class="pp q3">●●●</span> Primary</div></div><span class="chip good">Approved</span><span class="btn sm">Open</span></div>
+        </div>
+        <div class="card">
+          <div class="ch"><h5>Chapters</h5><span>resources linked to each chapter · click to open</span></div>
+          <div class="chart" id="chapChart" style="height:120px"></div>
+          <div class="axis" id="chapAxis" style="height:16px"></div>
+          <div class="tip" id="chapTip">Hover a chapter to see its numbers.</div>
+        </div>
+        <div class="card flush">
+          <table>
+            <thead><tr><th>Chapter</th><th>Primary</th><th>Substantial</th><th>Waiting</th><th>Reading</th><th>Coverage</th></tr></thead>
+            <tbody>
+              <tr><td><b>Genesis 15</b></td><td>1</td><td>2</td><td>6</td><td>Top 2%</td><td><span class="chip thin">Thin</span></td></tr>
+              <tr><td><b>Genesis 3</b></td><td>4</td><td>5</td><td>9</td><td>Top 3%</td><td><span class="chip good">Good</span></td></tr>
+              <tr><td><b>Genesis 22</b></td><td>2</td><td>3</td><td>4</td><td>Top 5%</td><td><span class="chip thin">Thin</span></td></tr>
+              <tr><td><b>Genesis 36</b></td><td>0</td><td>0</td><td>0</td><td>Low</td><td><span class="chip empty">Empty</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div></div>
+  </div>
+
+  <div class="plate">
+    <div class="cap"><span class="eyebrow">Passage</span><h3>Genesis 1, verse by verse</h3><p>Each square is a verse, shaded by how many approved resources it has. Click a verse to see its resources by strength. The top 3 are what the site shows. Drag to reorder them. Click verses 1, 2 or 3 to try it.</p></div>
+    <div class="scroll"><div class="sx">
+      <div class="nav"><div class="ws"><b>G</b><div>GTY Core<small>Workplace</small></div></div>
+        <span>Content Manager</span><span>Media Library</span>
+        <div class="g">PLUGINS</div><span>Broadcast Calendar</span><span>Content Sync</span><span class="on">Scripture Map</span>
+        <div class="g">GENERAL</div><span>Settings</span></div>
+      <div class="main">
+        <div class="crumb">Scripture Map › Genesis › 1</div>
+        <div class="head"><div><h4 id="pvTitle">Genesis 1:1</h4><div class="sub" id="pvSub">7 approved · 2 suggestions waiting · site shows 3, then More (4)</div></div><div class="acts"><span class="btn">Preview on site</span><span class="btn pri">Add resource</span></div></div>
+        <div class="card">
+          <div class="ch"><h5>Genesis 1 · 31 verses</h5><span class="lvl">Show for: <span class="seg"><button aria-pressed="true" type="button">Verse</button><button aria-pressed="false" type="button">Chapter</button><button aria-pressed="false" type="button">Book</button></span></span></div>
+          <div class="verses" id="verses"></div>
+          <div class="vtext" id="vtext"><small>1:1</small>In the beginning God created the heavens and the earth.</div>
+        </div>
+        <div class="card flush" id="pvList"></div>
+      </div>
+    </div></div>
+  </div>
+
+  <div class="plate">
+    <div class="cap"><span class="eyebrow">Review</span><h3>One resource at a time</h3><p>The main editor task. The transcript is on the left, highlighted where the agent found evidence. The agent's suggestions are on the right. Pick a strength or Remove for each, then save. Keyboard: 1–3 sets the strength, X removes, Enter saves and moves on.</p></div>
+    <div class="scroll"><div class="sx">
+      <div class="nav"><div class="ws"><b>G</b><div>GTY Core<small>Workplace</small></div></div>
+        <span>Content Manager</span><span>Media Library</span>
+        <div class="g">PLUGINS</div><span>Broadcast Calendar</span><span>Content Sync</span><span class="on">Scripture Map</span>
+        <div class="g">GENERAL</div><span>Settings</span></div>
+      <div class="main">
+        <div class="head"><div class="crumb">Scripture Map › Review</div><div class="prog">34 of 812<span class="pb"><i></i></span></div></div>
+        <div class="head"><div><h4>The God Who Speaks</h4><div class="sub">Sermon · 1984 · 41 min · Scripture field: <b>“Selected Scriptures”</b></div></div><span class="btn">Open in Content Manager ↗</span></div>
+        <div class="flag">The Scripture field doesn't name a passage, so the agent read the transcript and found three.</div>
+        <div class="two">
+          <div class="card">
+            <div class="ch"><h5>Transcript</h5><span>highlights are evidence</span></div>
+            <div class="tx">
+              <p><span class="ts">04:12</span>…so turn with me to the very first verse of the Bible. <span class="h1">In the beginning God created the heavens and the earth.</span> Everything else in Scripture stands on this sentence, and tonight we’re going to stay right here.</p>
+              <p><span class="ts">11:40</span>And notice how He creates: <span class="h1">“Then God said, Let there be light.”</span> God speaks, and it is so. That’s verse 3, and it’s the pattern of the whole chapter.</p>
+              <p><span class="ts">22:05</span>John picks this up on purpose. <span class="h2">“In the beginning was the Word, and the Word was with God.”</span> The God who spoke in Genesis has now spoken in His Son.</p>
+              <p><span class="ts">30:18</span>The writer of Hebrews says it plainly: <span class="h3">God has spoken to us in His Son.</span></p>
+            </div>
+          </div>
+          <div class="card" style="display:grid;gap:10px;align-content:start">
+            <div class="ch" style="margin:0"><h5>Suggested passages</h5><span>3</span></div>
+            <div class="sugg" data-s="3"><div class="top"><span class="ref">Genesis 1:1–3</span><span class="btn sm">Edit range</span></div>
+              <div class="seg" role="group" aria-label="Strength for Genesis 1:1–3"><button type="button" data-v="3">●●● Primary</button><button type="button" data-v="2">●●○ Substantial</button><button type="button" data-v="1">●○○ Mention</button><button type="button" data-v="0" class="rm">Remove</button></div>
+              <div class="ev">38% of the sermon · quotes at 04:12 and 11:40 · <b>✓ quotes found in transcript</b></div></div>
+            <div class="sugg" data-s="2"><div class="top"><span class="ref">John 1:1–3</span><span class="btn sm">Edit range</span></div>
+              <div class="seg" role="group" aria-label="Strength for John 1:1–3"><button type="button" data-v="3">●●● Primary</button><button type="button" data-v="2">●●○ Substantial</button><button type="button" data-v="1">●○○ Mention</button><button type="button" data-v="0" class="rm">Remove</button></div>
+              <div class="ev">24% of the sermon · quote at 22:05 · <b>✓ quote found in transcript</b></div></div>
+            <div class="sugg" data-s="1"><div class="top"><span class="ref">Hebrews 1:1–2</span><span class="btn sm">Edit range</span></div>
+              <div class="seg" role="group" aria-label="Strength for Hebrews 1:1–2"><button type="button" data-v="3">●●● Primary</button><button type="button" data-v="2">●●○ Substantial</button><button type="button" data-v="1">●○○ Mention</button><button type="button" data-v="0" class="rm">Remove</button></div>
+              <div class="ev">6% of the sermon · quote at 30:18 · <b>✓ quote found in transcript</b></div></div>
+            <span class="btn sm" style="justify-self:start">+ Add a passage</span>
+          </div>
+        </div>
+        <div class="foot">
+          <div class="acts"><span class="btn">No main passage</span><span class="btn">Skip</span></div>
+          <div class="hint"><span><kbd>1</kbd>–<kbd>3</kbd> strength</span><span><kbd>X</kbd> remove</span><span><kbd>Enter</kbd> save</span></div>
+          <span class="btn pri">Save and next →</span>
+        </div>
+      </div>
+    </div></div>
+  </div>
+
+  <div class="plate">
+    <div class="cap"><span class="eyebrow">Output</span><h3>What the API returns, and what the site shows</h3><p>Only approved Primary and Substantial links count. <span class="ref">hasMore</span> is true only when more than 3 links pass, so the More button appears only when there really is more.</p></div>
+    <div class="scroll"><div class="api">
+<pre><span class="c">GET /api/scripture/Genesis/1/1?limit=3</span>
+{
+  <span class="k">"reference"</span>: { <span class="k">"display"</span>: <span class="s">"Genesis 1:1"</span>,
+                 <span class="k">"start"</span>: 1001001, <span class="k">"end"</span>: 1001001 },
+  <span class="k">"total"</span>: 7,
+  <span class="k">"hasMore"</span>: true,
+  <span class="k">"items"</span>: [
+    { <span class="k">"type"</span>: <span class="s">"sermon"</span>, <span class="k">"title"</span>: <span class="s">"In the Beginning, God"</span>,
+      <span class="k">"strength"</span>: <span class="s">"primary"</span>, <span class="k">"passage"</span>: <span class="s">"Genesis 1:1"</span> },
+    { <span class="k">"type"</span>: <span class="s">"question"</span>, <span class="k">"title"</span>: <span class="s">"Is the Creation Account Literal?"</span>,
+      <span class="k">"strength"</span>: <span class="s">"primary"</span>, <span class="k">"passage"</span>: <span class="s">"Genesis 1:1–2"</span> },
+    { <span class="k">"type"</span>: <span class="s">"article"</span>, <span class="k">"title"</span>: <span class="s">"Why Creation Matters for the Gospel"</span>,
+      <span class="k">"strength"</span>: <span class="s">"substantial"</span>, <span class="k">"passage"</span>: <span class="s">"Genesis 1:1"</span> }
+  ],
+  <span class="k">"nextCursor"</span>: <span class="s">"eyJvIjozfQ"</span>
+}
+
+<span class="c">Same shape for /Genesis/1 (a chapter) and /Genesis (a book).</span></pre>
+      <div class="site">
+        <h6>Resources on this verse</h6>
+        <div class="vs">“In the beginning God created the heavens and the earth.” <span style="font:13px -apple-system,sans-serif;color:#6B6B6B">Genesis 1:1</span></div>
+        <div class="cards">
+          <div class="rc"><small>Sermon</small><b>In the Beginning, God</b><span>Genesis 1:1</span></div>
+          <div class="rc"><small>Q&amp;A</small><b>Is the Creation Account Literal?</b><span>Genesis 1:1–2</span></div>
+          <div class="rc"><small>Article</small><b>Why Creation Matters for the Gospel</b><span>Genesis 1:1</span></div>
+        </div>
+        <button class="more" type="button">More on Genesis 1:1 (4)</button>
+      </div>
+    </div></div>
+  </div>
+</section>
+
+<section>
+  <div class="col stack">
+    <div class="eyebrow">Under the hood</div>
+    <h2>One table of links, ranked by fit</h2>
+    <p>Links live in one new collection, <span class="ref">scripture-link</span>, separate from the resources. That keeps imported fields like Scripture untouched, so content sync and editor edits don't collide.</p>
+  </div>
+  <div style="overflow-x:auto">
+  <table class="fields">
+    <thead><tr><th>Field</th><th>Holds</th></tr></thead>
+    <tbody>
+      <tr><td>resourceType, resourceId</td><td>Which sermon, article, blog, Q&amp;A, devotional, series or study guide</td></tr>
+      <tr><td>startVerse, endVerse</td><td>The passage as two verse numbers, for example 01001001 to 01001003</td></tr>
+      <tr><td>strength</td><td>primary, substantial or mention</td></tr>
+      <tr><td>status</td><td>suggested, approved or rejected, plus a reason when rejected</td></tr>
+      <tr><td>source</td><td>Scripture field, agent, editor, or inherited from a series</td></tr>
+      <tr><td>evidence</td><td>Quote, timestamp or paragraph, share of the resource, and which model suggested it</td></tr>
+      <tr><td>pinnedRank</td><td>An editor's manual order for the top 3</td></tr>
+      <tr><td>reviewedBy, reviewedAt</td><td>Who decided, and when</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="col stack">
+    <p>Within each strength, a link that matches the requested passage closely ranks above one that covers much more. A sermon on all of Genesis 1 is a strong match for <span class="ref">/Genesis/1</span> and a weak one for <span class="ref">/Genesis/1/1</span>. Editor pins always come first.</p>
+  </div>
+  <div class="formula">fit = strengthWeight × overlap(request, link) ÷ span(request ∪ link)</div>
+</section>
+
+<section>
+  <div class="col stack">
+    <div class="eyebrow">Plan</div>
+    <h2>Build it in five phases</h2>
+    <p>Each phase ships something editors can use. The first phase already gives the site real results, from the Scripture fields that name a specific passage.</p>
+  </div>
+  <ol class="phases">
+    <li><span class="k">P1</span><div><b>Links table and import</b><span>Verse numbering, a reference parser, the scripture-link collection, an import from specific Scripture fields, and the read API.</span></div></li>
+    <li><span class="k">P2</span><div><b>Home, Book and Passage screens</b><span>Browse coverage, approve imported links, and pin the top 3.</span></div></li>
+    <li><span class="k">P3</span><div><b>Agents and Review</b><span>Agents read sermon transcripts first. Quote checks, the Review screen, and reasons on every rejection.</span></div></li>
+    <li><span class="k">P4</span><div><b>Accuracy set</b><span>Editors label about 100 passages by hand. Every agent change is scored on how many of its top 3 picks match before its suggestions reach the queue.</span></div></li>
+    <li><span class="k">P5</span><div><b>Everything else</b><span>Articles, blogs and Q&amp;As, gap-filling for thin passages, caching, and other languages.</span></div></li>
+  </ol>
+</section>
+
+<section>
+  <div class="col stack">
+    <div class="eyebrow">Open questions</div>
+    <h2>To decide before building</h2>
+    <ol class="qs">
+      <li>Who are the editors, and roughly how many hours a week can they give to Review?</li>
+      <li>How many resources have no transcript? Those need transcription from audio first.</li>
+      <li>Once accuracy is proven, may some suggestions skip review, for example sermons whose Scripture field names one passage?</li>
+      <li>Should the site's “Resources on this verse” block live on gty.org, in the Bible app, or both?</li>
+    </ol>
+    <p class="note">All titles, quotes and counts on this page are sample data for illustration.</p>
+  </div>
+</section>
+</div>
+
+<script>
+(function(){
+  // Home: books
+  const books="Gen Exo Lev Num Deu Jos Jdg Rut 1Sa 2Sa 1Ki 2Ki 1Ch 2Ch Ezr Neh Est Job Psa Pro Ecc Sng Isa Jer Lam Eze Dan Hos Joe Amo Oba Jon Mic Nah Hab Zep Hag Zec Mal Mat Mrk Luk Jhn Act Rom 1Co 2Co Gal Eph Php Col 1Th 2Th 1Ti 2Ti Tit Phm Heb Jas 1Pe 2Pe 1Jn 2Jn 3Jn Jud Rev".split(" ");
+  const names={Gen:"Genesis",Exo:"Exodus",Psa:"Psalms",Pro:"Proverbs",Isa:"Isaiah",Dan:"Daniel",Mat:"Matthew",Mrk:"Mark",Luk:"Luke",Jhn:"John",Act:"Acts",Rom:"Romans","1Co":"1 Corinthians","2Co":"2 Corinthians",Gal:"Galatians",Eph:"Ephesians",Php:"Philippians",Col:"Colossians",Heb:"Hebrews",Jas:"James","1Pe":"1 Peter","1Jn":"1 John",Rev:"Revelation",Job:"Job"};
+  const tot=[210,95,30,35,60,40,38,18,40,30,35,25,12,15,14,20,16,55,190,80,22,14,140,50,10,45,70,20,8,15,3,25,14,5,12,6,5,28,22,420,310,380,520,300,480,330,170,120,260,110,95,90,40,150,110,40,8,240,160,170,70,120,6,5,30,280];
+  function stack(el,vals,H,tipEl,label){
+    const max=Math.max(...vals);
+    vals.forEach((t,i)=>{
+      const p=Math.round(t*.32),s=Math.round(t*.4),m=t-p-s;
+      const d=document.createElement("div");d.className="bar";d.style.height=Math.max(2,t/max*H)+"px";
+      d.innerHTML=t?`<i style="height:${p/t*100}%;background:var(--p)"></i><i style="height:${s/t*100}%;background:var(--p2)"></i><i style="height:${m/t*100}%;background:var(--n150)"></i>`:`<i style="height:100%;background:#F5C0B8"></i>`;
+      d.onmouseenter=()=>{tipEl.innerHTML=`<b>${label(i)}</b> · ${t} resources · ${p} primary · ${s} substantial · ${m} mention`;};
+      el.appendChild(d);
+    });
+  }
+  stack(document.getElementById("bookChart"),tot,110,document.getElementById("bookTip"),i=>names[books[i]]||books[i]);
+  const ax=document.getElementById("bookAxis");
+  ["Gen","Psa","Isa","Mat","Rom","Heb","Rev"].forEach(b=>{const i=books.indexOf(b);ax.insertAdjacentHTML("beforeend",`<b style="left:${(i+.5)/66*100}%">${b}</b>`)});
+  ax.insertAdjacentHTML("beforeend",`<span class="sec" style="left:0;width:${39/66*100}%">OLD TESTAMENT</span><span class="sec" style="left:${39/66*100}%;width:${27/66*100}%">NEW TESTAMENT</span>`);
+
+  // Book: Genesis chapters
+  const ch=[24,9,18,5,3,6,4,5,4,2,7,8,3,4,3,2,5,4,3,1,3,9,2,3,4,3,5,4,3,3,2,6,2,1,2,0,8,2,6,4,5,3,2,2,5,2,1,3,4,7];
+  stack(document.getElementById("chapChart"),ch,120,document.getElementById("chapTip"),i=>"Genesis "+(i+1));
+  const cax=document.getElementById("chapAxis");
+  [1,10,20,30,40,50].forEach(n=>cax.insertAdjacentHTML("beforeend",`<b style="left:${(n-.5)/50*100}%">${n}</b>`));
+
+  // Passage: verses of Genesis 1
+  const vcount=[7,4,5,2,1,1,0,1,1,1,1,1,0,2,1,1,1,1,0,1,1,2,0,1,1,6,5,3,2,1,3];
+  const texts={1:"In the beginning God created the heavens and the earth.",2:"The earth was formless and void, and darkness was over the surface of the deep, and the Spirit of God was moving over the surface of the waters.",3:"Then God said, “Let there be light”; and there was light."};
+  const lists={
+    1:{sub:"7 approved · 2 suggestions waiting · site shows 3, then More (4)",shown:[["Sermon","In the Beginning, God","Genesis 1:1",3,"📌 pinned"],["Q&A","Is the Creation Account Literal?","Genesis 1:1–2",3,""],["Article","Why Creation Matters for the Gospel","Genesis 1:1",2,""]],more:[["Sermon","The Creation of the Universe","Genesis 1:1–31",3],["Series","Genesis: The Beginning","Genesis 1–50",3],["Blog","Answering the Evolutionist","Genesis 1:1",2],["Sermon","The God Who Speaks","Genesis 1:1–3",3]],mention:9},
+    2:{sub:"4 approved · 1 suggestion waiting · site shows 3, then More (1)",shown:[["Q&A","Is the Creation Account Literal?","Genesis 1:1–2",3,""],["Sermon","The Spirit in Creation","Genesis 1:2",3,""],["Sermon","The Creation of the Universe","Genesis 1:1–31",3,""]],more:[["Series","Genesis: The Beginning","Genesis 1–50",3]],mention:3},
+    3:{sub:"5 approved · 1 suggestion waiting · site shows 3, then More (2)",shown:[["Sermon","The God Who Speaks","Genesis 1:1–3",3,""],["Article","Light Before the Sun","Genesis 1:3–5",2,""],["Sermon","The Creation of the Universe","Genesis 1:1–31",3,""]],more:[["Series","Genesis: The Beginning","Genesis 1–50",3],["Devotional","Let There Be Light","Genesis 1:3",2]],mention:4}
+  };
+  const pp=s=>s===3?'<span class="pp q3">●●●</span> Primary':s===2?'<span class="pp q2">●●○</span> Substantial':'<span class="pp q1">●○○</span> Mention';
+  const vEl=document.getElementById("verses");
+  vcount.forEach((n,i)=>{const b=document.createElement("button");b.type="button";b.className="vc "+(n===0?"l0":n<=1?"l1":n<=2?"l2":n<=4?"l3":"l4");b.textContent=i+1;b.setAttribute("aria-pressed",i===0?"true":"false");b.title=`Genesis 1:${i+1} · ${n} approved`;b.onclick=()=>select(i+1);vEl.appendChild(b);});
+  function select(v){
+    [...vEl.children].forEach((b,i)=>b.setAttribute("aria-pressed",i===v-1?"true":"false"));
+    document.getElementById("pvTitle").textContent="Genesis 1:"+v;
+    const d=lists[v];
+    document.getElementById("vtext").innerHTML=`<small>1:${v}</small>${texts[v]||"Sample data covers verses 1 to 3 only."}`;
+    const L=document.getElementById("pvList");
+    if(!d){document.getElementById("pvSub").textContent=vcount[v-1]+" approved · sample data covers verses 1 to 3";L.innerHTML=`<div class="grp">Resources<em>sample data covers verses 1 to 3</em></div><div class="rw"><span></span><div class="m">Click verse 1, 2 or 3 to see a full list.</div><span></span></div>`;return;}
+    document.getElementById("pvSub").textContent=d.sub;
+    const row=(r,grip)=>`<div class="rw"><span class="grip">${grip?"⋮⋮":""}</span><div><div class="t">${r[1]}</div><div class="m"><span class="tag">${r[0]}</span>${r[2]} · ${pp(r[3])}${r[4]?" · "+r[4]:""}</div></div><span class="btn sm">Open</span></div>`;
+    L.innerHTML=`<div class="grp">Shown on the site<em>drag to reorder</em></div>${d.shown.map(r=>row(r,true)).join("")}
+      <div class="grp">Behind More (${d.more.length})<em>approved, ranked by fit</em></div>${d.more.map(r=>row(r,true)).join("")}
+      <div class="grp">Mentions (${d.mention})<em>not shown on the site · expand</em></div>`;
+  }
+  select(1);
+
+  // Review: strength picker
+  document.querySelectorAll(".sugg").forEach(s=>{
+    const set=v=>s.querySelectorAll("button[data-v]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.v===String(v)?"true":"false"));
+    set(s.dataset.s);
+    s.querySelectorAll("button[data-v]").forEach(b=>b.onclick=()=>set(b.dataset.v));
+  });
+})();
+</script>
+</body>
+</html>
